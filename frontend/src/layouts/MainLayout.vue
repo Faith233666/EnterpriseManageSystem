@@ -85,10 +85,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute, useRouter, type RouteRecordRaw } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { Expand, Fold } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import { usePermissionStore } from '@/stores/permission'
+import type { RouteMenuNode } from '@/types/api'
 
 interface SidebarMenuItem {
   index: string
@@ -103,65 +104,80 @@ const userStore = useUserStore()
 const permissionStore = usePermissionStore()
 
 const collapsed = ref(false)
-const activeMenu = computed(() => route.path)
 const avatarText = computed(
   () => (userStore.userInfo?.nickname || 'U').slice(0, 1),
 )
 
-/**
- * 侧边栏菜单：
- * - 仅 1 个可见子路由时提升为独立一级菜单（首页不再变成子菜单）
- * - 多个子路由仍显示为折叠菜单
- */
-const sidebarMenus = computed<SidebarMenuItem[]>(() => {
-  const result: SidebarMenuItem[] = []
-  for (const r of permissionStore.routes) {
-    if (r.meta?.hidden || r.path === '/login' || r.name === 'NotFound') continue
+function absPath(parent: string, child = '') {
+  const base = parent.startsWith('/') ? parent : `/${parent}`
+  if (!child) return base || '/'
+  if (child.startsWith('/')) return child
+  return `${base.replace(/\/$/, '')}/${child}`
+}
 
-    const children = visibleChildren(r)
-    if (children.length === 1 && !(r.meta as Record<string, unknown> | undefined)?.alwaysShow) {
-      const only = children[0]
-      result.push({
-        index: resolvePath(r.path, String(only.path || '')),
-        title: String(only.meta?.title || r.meta?.title || ''),
-        icon: only.meta?.icon ? String(only.meta.icon) : undefined,
-      })
-      continue
-    }
-
-    if (children.length > 0) {
-      result.push({
-        index: resolvePath(r.path),
-        title: String(r.meta?.title || ''),
-        icon: r.meta?.icon ? String(r.meta.icon) : undefined,
-        children: children.map((c) => ({
-          index: resolvePath(r.path, String(c.path || '')),
-          title: String(c.meta?.title || ''),
-          icon: c.meta?.icon ? String(c.meta.icon) : undefined,
-        })),
-      })
-      continue
-    }
-
-    result.push({
-      index: resolvePath(r.path),
-      title: String(r.meta?.title || ''),
-      icon: r.meta?.icon ? String(r.meta.icon) : undefined,
+function menusToSidebar(menus: RouteMenuNode[]): SidebarMenuItem[] {
+  return menus
+    .filter((m) => m.menuType !== 3 && m.visible !== 0)
+    .flatMap((m) => {
+      const kids = (m.children || []).filter(
+        (c) => c.menuType !== 3 && c.visible !== 0,
+      )
+      // 空目录不展示，避免点进去 404
+      if (m.menuType === 1 && kids.length === 0) {
+        return []
+      }
+      // 只有一个子页的目录（预约中心/会员中心）显示为一级菜单
+      if (m.menuType === 1 && kids.length === 1) {
+        return [
+          {
+            index: absPath(m.path),
+            title: m.name,
+            icon: m.icon || kids[0]?.icon || undefined,
+          },
+        ]
+      }
+      if (kids.length > 0) {
+        return [
+          {
+            index: absPath(m.path),
+            title: m.name,
+            icon: m.icon || undefined,
+            children: kids.map((c) => ({
+              index: absPath(m.path, c.path),
+              title: c.name,
+              icon: c.icon || undefined,
+            })),
+          },
+        ]
+      }
+      return [
+        {
+          index: absPath(m.path),
+          title: m.name,
+          icon: m.icon || undefined,
+        },
+      ]
     })
+}
+
+const sidebarMenus = computed<SidebarMenuItem[]>(() => [
+  { index: '/dashboard', title: '首页', icon: 'HomeFilled' },
+  ...menusToSidebar(userStore.menus),
+])
+
+const activeMenu = computed(() => {
+  const path = route.path
+  const indexes: string[] = []
+  for (const item of sidebarMenus.value) {
+    indexes.push(item.index)
+    item.children?.forEach((c) => indexes.push(c.index))
   }
-  return result
+  return (
+    indexes
+      .filter((i) => path === i || path.startsWith(`${i}/`))
+      .sort((a, b) => b.length - a.length)[0] || path
+  )
 })
-
-function visibleChildren(parent: RouteRecordRaw) {
-  return (parent.children || []).filter((c) => !c.meta?.hidden)
-}
-
-function resolvePath(parent: string, child = '') {
-  const base = parent === '/' ? '' : parent.replace(/\/$/, '')
-  const normalized = !base || base.startsWith('/') ? base : `/${base}`
-  if (!child) return normalized || '/'
-  return `${normalized}/${child.replace(/^\//, '')}`
-}
 
 async function onCommand(cmd: string) {
   if (cmd === 'logout') {

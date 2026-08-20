@@ -14,6 +14,12 @@ import { SysRole } from './modules/role/entities/sys-role.entity';
 import { SysUser } from './modules/user/entities/sys-user.entity';
 import { UserModule } from './modules/user/user.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { MemberModule } from './modules/member/member.module';
+import { BizMember } from './modules/member/entities/biz-member.entity';
+import { BookingModule } from './modules/booking/booking.module';
+import { BizAppointment } from './modules/booking/entities/biz-appointment.entity';
+import { BizServiceItem } from './modules/booking/entities/biz-service-item.entity';
+import { BizStaff } from './modules/booking/entities/biz-staff.entity';
 
 @Module({
   imports: [
@@ -28,7 +34,15 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
         username: config.get<string>('DB_USERNAME', 'root'),
         password: config.get<string>('DB_PASSWORD', 'root'),
         database: config.get<string>('DB_DATABASE', 'enterprise_manage'),
-        entities: [SysUser, SysRole, SysMenu],
+        entities: [
+          SysUser,
+          SysRole,
+          SysMenu,
+          BizMember,
+          BizAppointment,
+          BizServiceItem,
+          BizStaff,
+        ],
         // 生产环境请关闭 synchronize，改用迁移
         synchronize: false,
         timezone: '+08:00',
@@ -43,6 +57,8 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     RoleModule,
     MenuModule,
     DashboardModule,
+    MemberModule,
+    BookingModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

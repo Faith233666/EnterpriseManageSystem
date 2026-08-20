@@ -28,9 +28,12 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
 ]
 
-/** 404 兜底路由（动态路由注册完成后再 addRoute） */
+/**
+ * 404 挂到 Root 下，避免顶级 catch-all 抢走 /booking 等子路由
+ * 动态菜单 addRoute('Root') 完成后再注册
+ */
 export const notFoundRoute: RouteRecordRaw = {
-  path: '/:pathMatch(.*)*',
+  path: ':pathMatch(.*)*',
   name: 'NotFound',
   component: () => import('@/views/error/404.vue'),
   meta: { title: '404', hidden: true },

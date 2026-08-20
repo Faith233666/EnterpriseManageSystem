@@ -164,6 +164,19 @@ INSERT INTO `sys_menu`
 (43, 4, '菜单修改', 3, NULL, NULL, 'sys:menu:edit',   NULL, 3, 1, 1),
 (44, 4, '菜单删除', 3, NULL, NULL, 'sys:menu:remove', NULL, 4, 1, 1);
 
+-- 会员中心
+INSERT INTO `sys_menu`
+(`id`, `parent_id`, `menu_name`, `menu_type`, `path`, `component`, `redirect`, `perms`, `icon`, `sort`, `visible`, `status`) VALUES
+(10, 0, '会员中心', 1, '/member', 'Layout', '/member/archive', NULL, 'Postcard', 2, 1, 1),
+(11, 10, '会员档案', 2, 'archive', 'member/index', NULL, 'member:list', 'User', 1, 1, 1);
+
+INSERT INTO `sys_menu`
+(`id`, `parent_id`, `menu_name`, `menu_type`, `path`, `component`, `perms`, `icon`, `sort`, `visible`, `status`) VALUES
+(111, 11, '会员查询', 3, NULL, NULL, 'member:query',  NULL, 1, 1, 1),
+(112, 11, '会员新增', 3, NULL, NULL, 'member:add',    NULL, 2, 1, 1),
+(113, 11, '会员修改', 3, NULL, NULL, 'member:edit',   NULL, 3, 1, 1),
+(114, 11, '会员删除', 3, NULL, NULL, 'member:remove', NULL, 4, 1, 1);
+
 -- 超级管理员绑定全部菜单
 INSERT INTO `sys_role_menu` (`role_id`, `menu_id`)
 SELECT 1, `id` FROM `sys_menu`;

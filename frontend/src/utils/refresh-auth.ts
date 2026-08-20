@@ -31,10 +31,10 @@ export async function refreshDynamicAuth(router: Router) {
   const info = await userStore.fetchPermissionInfo()
   const dynamicRoutes = permissionStore.setRoutes(info.menus)
   dynamicRoutes.forEach((route) => {
-    router.addRoute(route)
+    router.addRoute('Root', route)
   })
   if (!router.hasRoute('NotFound')) {
-    router.addRoute(notFoundRoute)
+    router.addRoute('Root', notFoundRoute)
   }
 
   // 当前页已无对应路由时回首页

@@ -54,11 +54,11 @@ router.beforeEach(async (to, _from, next) => {
     const dynamicRoutes = permissionStore.setRoutes(info.menus)
 
     dynamicRoutes.forEach((route) => {
-      router.addRoute(route)
+      router.addRoute('Root', route)
     })
-    // 必须在动态路由之后注册 404，否则会吞掉业务路径
+    // 必须在动态路由之后、作为 Root 子路由注册 404，否则会吞掉业务路径
     if (!router.hasRoute('NotFound')) {
-      router.addRoute(notFoundRoute)
+      router.addRoute('Root', notFoundRoute)
     }
 
     next({ ...to, replace: true })

@@ -161,6 +161,112 @@ export interface MenuFormModel {
   isCache: number
 }
 
+/** 会员档案 */
+export interface MemberItem {
+  id: number
+  name: string
+  phone: string
+  /** 1普通 2黄金 3钻石 */
+  level: number
+  points: number
+  balance: string | number
+  status: number
+  remark: string | null
+  createdAt: string
+}
+
+export interface MemberQueryParams {
+  page?: number
+  pageSize?: number
+  name?: string
+  phone?: string
+  level?: number | ''
+  status?: number | ''
+}
+
+export interface MemberFormModel {
+  id?: number
+  name: string
+  phone: string
+  level: number
+  points: number
+  balance: number
+  status: number
+  remark?: string
+}
+
+/** 预约状态：1待服务 2已完成 3已取消 4已过期 */
+export type BookingStatus = 1 | 2 | 3 | 4
+
+export interface BookingServiceOption {
+  id: number
+  name: string
+  duration: number
+}
+
+export interface BookingStaffOption {
+  id: number
+  name: string
+  storeName: string
+}
+
+export interface BookingSlot {
+  start: string
+  end: string
+  label: string
+  booked: number
+  capacity: number
+  available: boolean
+}
+
+export interface BookingItem {
+  id: number
+  orderNo: string
+  customerName: string
+  phone: string
+  serviceId: number
+  staffId: number
+  appointDate: string
+  slotStart: string
+  slotEnd: string
+  status: BookingStatus
+  remark: string | null
+  cancelReason: string | null
+  cancelledAt: string | null
+  createdAt: string
+  service?: BookingServiceOption
+  staff?: BookingStaffOption
+}
+
+export interface BookingQueryParams {
+  page?: number
+  pageSize?: number
+  keyword?: string
+  status?: BookingStatus | ''
+  beginDate?: string
+  endDate?: string
+}
+
+export interface BookingStats {
+  pending: number
+  done: number
+  cancelled: number
+  expired: number
+  today: number
+  total: number
+}
+
+export interface BookingFormModel {
+  id?: number
+  customerName: string
+  phone: string
+  serviceId?: number
+  staffId?: number
+  appointDate: string
+  slotStart: string
+  remark?: string
+}
+
 /** 首页看板数据 */
 export interface DashboardStats {
   cards: {
