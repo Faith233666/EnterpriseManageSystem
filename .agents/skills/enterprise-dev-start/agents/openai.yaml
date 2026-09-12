@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start Enterprise System"
+  short_description: "Start MariaDB, NestJS, and Vite quickly"
+  default_prompt: "Start the EnterpriseManageSystem database, backend, and frontend, then report their URLs."
