@@ -61,7 +61,7 @@
           :icon="Plus"
           @click="openDialog()"
         >
-          新增
+          新增会员
         </el-button>
         <el-button
           v-permission="'member:remove'"
