@@ -24,6 +24,9 @@ import type {
   BookingServiceOption,
   BookingStaffOption,
   BookingStats,
+  ReportOverviewData,
+  ReportDetailItem,
+  ReportQueryParams,
 } from '@/types/api'
 
 /** 登录 */
@@ -316,3 +319,21 @@ export function batchDeleteBookingApi(ids: number[]) {
     data: { ids },
   })
 }
+
+// -------------------- 数据报表 --------------------
+
+export function getReportOverviewApi() {
+  return request<ReportOverviewData>({
+    url: '/report/overview',
+    method: 'get',
+  })
+}
+
+export function getReportDetailApi(params: ReportQueryParams) {
+  return request<PageResult<ReportDetailItem>>({
+    url: '/report/detail',
+    method: 'get',
+    params,
+  })
+}
+

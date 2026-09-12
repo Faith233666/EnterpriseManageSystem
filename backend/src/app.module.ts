@@ -20,6 +20,7 @@ import { BookingModule } from './modules/booking/booking.module';
 import { BizAppointment } from './modules/booking/entities/biz-appointment.entity';
 import { BizServiceItem } from './modules/booking/entities/biz-service-item.entity';
 import { BizStaff } from './modules/booking/entities/biz-staff.entity';
+import { ReportModule } from './modules/report/report.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { BizStaff } from './modules/booking/entities/biz-staff.entity';
     DashboardModule,
     MemberModule,
     BookingModule,
+    ReportModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

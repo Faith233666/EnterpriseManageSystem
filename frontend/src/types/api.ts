@@ -283,3 +283,51 @@ export interface DashboardStats {
   roleDistribution: Array<{ name: string; value: number }>
   moduleVisits: Array<{ name: string; value: number }>
 }
+
+/** 报表概览数据类型 */
+export interface ReportOverviewData {
+  kpi: {
+    totalAppointments: number
+    completedCount: number
+    completionRate: string
+    totalMembers: number
+    vipMembers: number
+    serviceItemCount: number
+    activeStaffCount: number
+  }
+  statusDistribution: Array<{ name: string; value: number }>
+  serviceDistribution: Array<{ name: string; value: number }>
+  staffPerformance: Array<{ name: string; total: number; completed: number }>
+  memberLevels: Array<{ name: string; value: number }>
+  trend: {
+    dates: string[]
+    totalList: number[]
+    completedList: number[]
+  }
+}
+
+export interface ReportDetailItem {
+  id: number
+  orderNo: string
+  customerName: string
+  phone: string
+  serviceName: string
+  duration: string
+  staffName: string
+  storeName: string
+  appointDate: string
+  timeSlot: string
+  status: number
+  createdAt: string
+}
+
+export interface ReportQueryParams {
+  page?: number
+  pageSize?: number
+  startDate?: string
+  endDate?: string
+  status?: number | ''
+  serviceId?: number | ''
+  keyword?: string
+}
+

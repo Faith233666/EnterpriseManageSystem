@@ -7,6 +7,7 @@ import type { RouteMenuNode } from '@/types/api'
 const pageLoaders: Record<string, () => Promise<unknown>> = {
   'booking/index': () => import('../views/booking/index.vue'),
   'member/index': () => import('../views/member/index.vue'),
+  'report/index': () => import('../views/report/index.vue'),
   'system/user/index': () => import('../views/system/user/index.vue'),
   'system/role/index': () => import('../views/system/role/index.vue'),
   'system/menu/index': () => import('../views/system/menu/index.vue'),
@@ -77,7 +78,7 @@ export function transformMenusToRoutes(menus: RouteMenuNode[]): RouteRecordRaw[]
             perms: menu.perms,
             hidden: menu.visible === 0,
           },
-        })
+        } as unknown as RouteRecordRaw)
       }
 
       if (menu.children?.length) {
@@ -97,7 +98,7 @@ export function transformMenusToRoutes(menus: RouteMenuNode[]): RouteRecordRaw[]
               icon: menu.icon,
               hidden: menu.visible === 0,
             },
-          })
+          } as unknown as RouteRecordRaw)
         }
       }
     }
